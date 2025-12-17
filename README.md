@@ -36,7 +36,7 @@ sudo apt update && sudo apt upgrade -y
 
 # Install common dependencies
 log_info "Installing common dependencies..."
-sudo apt install -y curl wget apt-transport-https software-properties-common ca-certificates gnupg lsb-release
+sudo apt install -y curl wget git apt-transport-https software-properties-common ca-certificates gnupg lsb-release build-essential
 
 # Install VSCode
 log_info "Installing Visual Studio Code..."
@@ -76,6 +76,33 @@ if ! command -v nvim &> /dev/null; then
     log_info "Neovim installed successfully: $(nvim --version | head -n1)"
 else
     log_warn "Neovim already installed: $(nvim --version | head -n1)"
+fi
+
+# Install LazyVim
+log_info "Installing LazyVim..."
+if [[ ! -d ~/.config/nvim ]]; then
+    # Backup existing config if it exists
+    if [[ -d ~/.config/nvim ]]; then
+        log_warn "Backing up existing Neovim config to ~/.config/nvim.backup"
+        mv ~/.config/nvim ~/.config/nvim.backup
+    fi
+    if [[ -d ~/.local/share/nvim ]]; then
+        mv ~/.local/share/nvim ~/.local/share/nvim.backup
+    fi
+    if [[ -d ~/.local/state/nvim ]]; then
+        mv ~/.local/state/nvim ~/.local/state/nvim.backup
+    fi
+    if [[ -d ~/.cache/nvim ]]; then
+        mv ~/.cache/nvim ~/.cache/nvim.backup
+    fi
+    
+    # Clone LazyVim starter
+    git clone https://github.com/LazyVim/starter ~/.config/nvim
+    rm -rf ~/.config/nvim/.git
+    log_info "LazyVim installed successfully"
+    log_warn "Run 'nvim' to complete LazyVim installation (plugins will auto-install)"
+else
+    log_warn "Neovim config already exists at ~/.config/nvim"
 fi
 
 # Install GitHub CLI
@@ -194,4 +221,5 @@ echo "  1. Log out and back in for Docker group to take effect"
 echo "  2. Run 'sudo mysql_secure_installation' to secure MySQL"
 echo "  3. Configure PostgreSQL: 'sudo -u postgres psql'"
 echo "  4. Authenticate GitHub CLI: 'gh auth login'"
+echo "  5. Run 'nvim' to complete LazyVim plugin installation"
 echo ""
