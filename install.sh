@@ -246,3 +246,5 @@ echo "  5. Authenticate GitHub CLI: 'gh auth login'"
 echo "  6. Run 'nvim' to complete LazyVim plugin installation"
 echo "  7. Verify NVM: 'nvm --version' and 'node --version'"
 echo ""
+# install oh-my-zsh
+# install python-venv
