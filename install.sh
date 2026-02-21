@@ -152,6 +152,15 @@ else
   log_warn "MEGAsync already installed"
 fi
 
+# Install mysql-connector-python
+log_info "Installing mysql-connector-python..."
+if ! python3 -c "import mysql.connector" &>/dev/null; then
+  pip3 install --user mysql-connector-python --break-system-packages
+  log_info "mysql-connector-python installed successfully"
+else
+  log_warn "mysql-connector-python already installed"
+fi
+
 # Install Java Runtime Environment
 log_info "Installing Java JRE..."
 if ! command -v java &>/dev/null; then
