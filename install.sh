@@ -161,16 +161,16 @@ else
   log_warn "Java already installed: $(java -version 2>&1 | head -n1)"
 fi
 
-# Install MySQL
-log_info "Installing MySQL Server..."
-if ! command -v mysql &>/dev/null; then
-  sudo apt install -y mysql-server
-  sudo systemctl start mysql
-  sudo systemctl enable mysql
-  log_info "MySQL installed successfully"
-  log_warn "Run 'sudo mysql_secure_installation' to secure your MySQL installation"
+# Install MariaDB
+log_info "Installing MariaDB Server..."
+if ! command -v mysql &>/dev/null && ! command -v mariadb &>/dev/null; then
+  sudo apt install -y mariadb-server mariadb-client
+  sudo systemctl start mariadb
+  sudo systemctl enable mariadb
+  log_info "MariaDB installed successfully"
+  log_warn "Run 'sudo mysql_secure_installation' to secure your MariaDB installation"
 else
-  log_warn "MySQL already installed"
+  log_warn "MySQL/MariaDB already installed"
 fi
 
 # Install PostgreSQL 17
