@@ -142,10 +142,12 @@ fi
 log_info "Installing MEGAsync..."
 if ! command -v megasync &>/dev/null; then
   cd /tmp
-  wget https://mega.nz/linux/repo/xUbuntu_24.04/amd64/megasync-xUbuntu_24.04_amd64.deb
-  sudo apt install -y ./megasync-xUbuntu_24.04_amd64.deb || true
-  rm megasync-xUbuntu_24.04_amd64.deb
-  log_info "MEGAsync installed successfully"
+  # Use Debian 12 repository
+  wget https://mega.nz/linux/repo/Debian_12/amd64/megasync-Debian_12_amd64.deb
+  sudo apt install -y ./megasync-Debian_12_amd64.deb || log_warn "MEGAsync installation had issues, continuing..."
+  rm -f megasync-Debian_12_amd64.deb
+  log_info "MEGAsync installation attempted"
+
 else
   log_warn "MEGAsync already installed"
 fi
