@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # Development Environment Setup Script
-# Installs: VSCode, Node.js, Neovim 0.11.4, GitHub CLI, MEGAsync, Java JRE, MySQL, PostgreSQL 17, Docker, PHP
+# Installs: VSCode, Node.js, PM2, Neovim 0.11.4, dependencies(ripgrep, fd-find, fzf, lazygit),
+# GitHub CLI, MEGAsync, Java JRE, MariaDB, PostgreSQL 17, Docker, PHP, oh-my-zsh, python venv
 
 set -e # Exit on error
 
