@@ -162,6 +162,55 @@ else
   log_warn "Java already installed: $(java -version 2>&1 | head -n1)"
 fi
 
+# Install Python and python3-venv
+log_info "Installing Python and python3-venv..."
+if ! command -v python3 &>/dev/null; then
+  sudo apt install -y python3 python3-pip python3-venv python3.11-venv
+  log_info "Python installed: $(python3 --version)"
+else
+  log_warn "Python already installed: $(python3 --version)"
+  # Ensure venv packages are installed even if Python exists
+  if ! dpkg -l | grep -q python3-venv; then
+    sudo apt install -y python3-venv python3.11-venv
+    log_info "python3-venv and python3.11-venv installed successfully"
+  else
+    log_warn "python3-venv already installed"
+    # Still try to install python3.11-venv specifically
+    sudo apt install -y python3.11-venv 2>/dev/null || log_warn "python3.11-venv may already be installed"
+  fi
+fi
+
+# Verify pip3 is available
+if ! command -v pip3 &>/dev/null; then
+  log_error "pip3 not found after installation. Trying to install python3-pip again..."
+  sudo apt install -y python3-pip
+fi
+
+# Install pynvim globally
+log_info "Installing pynvim (Python provider for Neovim)..."
+if ! python3 -c "import pynvim" &>/dev/null; then
+  pip3 install --user pynvim --break-system-packages
+  log_info "pynvim installed successfully"
+else
+  log_warn "pynvim already installed"
+fi
+log_info "Installing pynvim (Python provider for Neovim)..."
+if ! python3 -c "import pynvim" &>/dev/null; then
+  pip3 install --user pynvim --break-system-packages
+  log_info "pynvim installed successfully"
+else
+  log_warn "pynvim already installed"
+fi
+
+# Install mysql-connector-python
+log_info "Installing mysql-connector-python..."
+if ! python3 -c "import mysql.connector" &>/dev/null; then
+  pip3 install --user mysql-connector-python --break-system-packages
+  log_info "mysql-connector-python installed successfully"
+else
+  log_warn "mysql-connector-python already installed"
+fi
+
 # Install MariaDB
 log_info "Installing MariaDB Server..."
 if ! command -v mysql &>/dev/null && ! command -v mariadb &>/dev/null; then
