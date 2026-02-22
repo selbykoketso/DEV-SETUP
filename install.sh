@@ -265,21 +265,34 @@ else
   log_warn "PHP already installed: $(php -v | head -n1)"
 fi
 
-# Install Python and python3-venv
-log_info "Installing Python and python3-venv..."
-if ! command -v python3 &>/dev/null; then
-  sudo apt install -y python3 python3-pip python3-venv python3.11-venv
-  log_info "Python installed: $(python3 --version)"
+# Install PM2 globally
+log_info "Installing PM2 globally..."
+if ! command -v pm2 &>/dev/null; then
+  npm install -g pm2
+  log_info "PM2 installed successfully: $(pm2 --version)"
 else
-  log_warn "Python already installed: $(python3 --version)"
-  # Ensure venv packages are installed even if Python exists
-  if ! dpkg -l | grep -q python3-venv; then
-    sudo apt install -y python3-venv python3.11-venv
-    log_info "python3-venv and python3.11-venv installed successfully"
+  log_warn "PM2 already installed: $(pm2 --version)"
+fi
+
+# Install Nginx
+log_info "Installing Nginx..."
+if ! command -v nginx &>/dev/null; then
+  sudo apt install -y nginx
+  # Try to start with systemd if available, otherwise skip
+  if command -v systemctl &>/dev/null && systemctl is-system-running &>/dev/null; then
+    sudo systemctl start nginx
+    sudo systemctl enable nginx
   else
-    log_warn "python3-venv already installed"
-    # Still try to install python3.11-venv specifically
-    sudo apt install -y python3.11-venv 2>/dev/null || log_warn "python3.11-venv may already be installed"
+    log_warn "systemd not available, skipping nginx service start"
+  fi
+  log_info "Nginx installed successfully"
+else
+  log_warn "Nginx already installed"
+  # Check if nginx is running
+  if pgrep nginx >/dev/null; then
+    log_info "Nginx is already running"
+  elif command -v systemctl &>/dev/null && systemctl is-system-running &>/dev/null; then
+    sudo systemctl start nginx 2>/dev/null || log_warn "Could not start nginx service"
   fi
 fi
 
