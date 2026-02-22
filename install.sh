@@ -278,6 +278,7 @@ fi
 log_info "Installing Nginx..."
 if ! command -v nginx &>/dev/null; then
   sudo apt install -y nginx
+  echo 'export PATH="$PATH:/usr/sbin"' >>~/.zshrc && source ~/.zshrc
   # Try to start with systemd if available, otherwise skip
   if command -v systemctl &>/dev/null && systemctl is-system-running &>/dev/null; then
     sudo systemctl start nginx
